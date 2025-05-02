@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 7.6.4.1 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="00:00:00"/>
+	<style type="text/css">
+		@page { size: 8.27in 11.69in; margin: 0.79in }
+		p { line-height: 115%; margin-bottom: 0.1in; background: transparent }
+		pre { background: transparent }
+		pre.western { font-family: "Liberation Mono", monospace; font-size: 10pt }
+		pre.cjk { font-family: "NSimSun", monospace; font-size: 10pt }
+		pre.ctl { font-family: "Liberation Mono", monospace; font-size: 10pt }
+	</style>
+</head>
+<body lang="en-US" link="#000080" vlink="#800000" dir="ltr"><pre class="western">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ru&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;Доброжелатель&lt;/title&gt;
+&lt;style&gt;
+body{margin:0;padding:0;font-family:'Courier New',monospace;background:#111;color:#fff;}
+.chat{max-width:600px;margin:30px auto;padding:20px;background:#1c1c1c;border-radius:10px;}
+.message{margin:10px 0;padding:10px;border-radius:10px;max-width:80%;}
+.from-dobro{background:#333;text-align:left;}
+.from-rustam{background:#444;text-align:right;margin-left:auto;}
+.choices{margin-top:10px;}
+.choices button{display:block;margin:5px 0;padding:10px;background:#555;color:#fff;border:none;border-radius:5px;cursor:pointer;width:100%;}
+.nick{color:#0f0;font-weight:bold;margin-bottom:5px;}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;audio id=&quot;bgmusic&quot; autoplay loop&gt;
+&lt;source src=&quot;music.mp3&quot; type=&quot;audio/mpeg&quot;&gt;
+&lt;/audio&gt;
+&lt;div class=&quot;chat&quot; id=&quot;chat&quot;&gt;
+&lt;div class=&quot;nick&quot;&gt;Доброжелатель&lt;/div&gt;
+&lt;div class=&quot;message from-dobro&quot;&gt;Привет, Рустам. Давненько мы не разговаривали... ;) &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;choices&quot; id=&quot;choices&quot;&gt;
+&lt;button onclick=&quot;reply(0)&quot;&gt;Ты кто вообще?&lt;/button&gt;
+&lt;button onclick=&quot;reply(1)&quot;&gt;Что тебе нужно?&lt;/button&gt;
+&lt;/div&gt;
+&lt;script&gt;
+const chat = document.getElementById('chat');
+const choices = document.getElementById('choices');
+let step = 0;
+
+const dialogs = [
+  {
+    rustam: [
+      &quot;Ты кто вообще?&quot;,
+      &quot;Что тебе нужно?&quot;
+    ],
+    dobro: [
+      &quot;Всего лишь наблюдатель. Милан ведь не рассказывал тебе обо мне? ;)&quot;,
+      &quot;Мне нужно... чтобы ты вспомнил. Милан, Шандор... они кое-что забыли. ;)&quot;
+    ]
+  },
+  {
+    rustam: [
+      &quot;Ты следишь за нами?&quot;,
+      &quot;Откуда ты знаешь про Милана?&quot;
+    ],
+    dobro: [
+      &quot;Следить — это грубо. Я просто... наблюдаю. Всегда. ;) &quot;,
+      &quot;Потому что я был там. Когда он кричал от боли. Когда Неля ушла. ;) &quot;
+    ]
+  },
+  {
+    rustam: [
+      &quot;Ты не имеешь права говорить о Неле!&quot;,
+      &quot;А что ты знаешь о Шандоре?&quot;
+    ],
+    dobro: [
+      &quot;Права? Хах. А у Нели было право исчезнуть, оставив его одного? ;) &quot;,
+      &quot;Он всё ещё хранит тайну. Но молчит. Даже от тебя. ;) &quot;
+    ]
+  },
+  {
+    rustam: [
+      &quot;Что ты от меня хочешь?&quot;,
+      &quot;Почему именно ты всё это знаешь?&quot;
+    ],
+    dobro: [
+      &quot;Я хочу, чтобы ты сделал выбор. За Милана... или против него. ;) &quot;,
+      &quot;Потому что я часть этой истории. Часть вас. ;) &quot;
+    ]
+  },
+  {
+    rustam: [
+      &quot;Я не буду играть в твои игры.&quot;,
+      &quot;Если ты навредишь Милану — я найду тебя.&quot;
+    ],
+    dobro: [
+      &quot;Ты уже в игре, Рустам. Ты просто не сразу понял. ;) &quot;,
+      &quot;Не бойся. Я не враг. Но выбор всё ближе... ;) &quot;
+    ]
+  },
+  {
+    rustam: [
+      &quot;Какой ещё выбор?&quot;,
+      &quot;Ты звучишь как маньяк.&quot;
+    ],
+    dobro: [
+      &quot;Тот, который ты сделаешь... когда узнаешь, что Шандор сделал за твоей спиной. ;) &quot;,
+      &quot;А ты попробуй поверить. Может, всё не так, как кажется. ;) &quot;
+    ]
+  }
+];
+
+function reply(index){
+  const d = dialogs[step];
+  addMessage('rustam', d.rustam[index]);
+  setTimeout(()=&gt;{
+    addMessage('dobro', d.dobro[index]);
+    step++;
+    if(dialogs[step]){
+      renderChoices(dialogs[step].rustam);
+    }else{
+      endGame();
+    }
+  },1500);
+}
+
+function addMessage(sender, text){
+  const msg = document.createElement('div');
+  msg.className = 'message ' + (sender === 'dobro' ? 'from-dobro' : 'from-rustam');
+  msg.innerText = text;
+  if(sender==='dobro'){
+    const nick = document.createElement('div');
+    nick.className = 'nick';
+    nick.innerText = 'Доброжелатель';
+    chat.appendChild(nick);
+  }
+  chat.appendChild(msg);
+  window.scrollTo(0,document.body.scrollHeight);
+}
+
+function renderChoices(options){
+  choices.innerHTML = '';
+  options.forEach((opt, i)=&gt;{
+    const btn = document.createElement('button');
+    btn.innerText = opt;
+    btn.onclick = ()=&gt;reply(i);
+    choices.appendChild(btn);
+  });
+}
+
+function endGame(){
+  choices.innerHTML = '';
+  addMessage('dobro', &quot;Скоро я вернусь. Будь готов, Рустам. Это только начало. ;)&quot;);
+}
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</body>
+</html>
